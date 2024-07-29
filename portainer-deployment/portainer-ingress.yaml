@@ -23,12 +23,12 @@ spec:
     type: HTTP
     unhealthyThreshold: 2
     port: 9090
-    requestPath: /healthz
+    requestPath: /
   logging:
     enable: true
     sampleRate: 1
   securityPolicy:
-    name: cap-mkt-dev-wish-portainer
+    name: cap-mkt-prod-stancloud-portainer
   sessionAffinity:
     affinityType: CLIENT_IP
   timeoutSec: 3600
