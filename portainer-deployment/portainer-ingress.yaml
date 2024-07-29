@@ -61,7 +61,7 @@ metadata:
     env: prod
     region: asia-northeast3
     service: portainer    
-  name: elb-mkt-prod-wish-portainer
+  name: elb-mkt-prod-stancloud-portainer
   namespace: portainer
 spec:
   rules:
@@ -72,7 +72,7 @@ spec:
           service:
             name: portainer
             port:
-              number: 9090
+              number: 9000
         path: "/"
-        #pathType: ImplementationSpecific
         pathType: Prefix
+
