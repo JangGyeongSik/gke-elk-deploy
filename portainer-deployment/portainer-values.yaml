@@ -14,32 +14,30 @@ enterpriseEdition:
 
 image:
   repository: portainer/portainer-ce
-  tag: 2.19.5
+  tag: 2.19.2
   pullPolicy: Always
 
 imagePullSecrets: []
 
 nodeSelector:
-  cloud.google.com/gke-nodepool: npg-01-asia-northeast3-a-mole
+  cloud.google.com/gke-nodepool: default-pool
 
 serviceAccount:
   annotations: {}
   name: portainer-sa-clusteradmin
 
 service:
-  # Set the httpNodePort and edgeNodePort only if the type is NodePort
-  # For Ingress, set the type to be ClusterIP and set ingress.enabled to true
-  # For Cloud Providers, set the type to be LoadBalancer
   type: ClusterIP
   httpPort: 9000
   httpsPort: 9443
-  # httpNodePort: 30777  # NodePort 설정은 필요 없음
-  # httpsNodePort: 30779 # NodePort 설정은 필요 없음
+  # NodePort 설정은 필요하지 않으므로 주석 처리하거나 삭제
+  # httpNodePort: 30777
+  # httpsNodePort: 30779
   # edgePort: 8000
   # edgeNodePort: 30776
   annotations:
-      cloud.google.com/neg: '{"ingress": true}'
-      cloud.google.com/backend-config: '{"ports": {"http":"backendconfig-portainer-server"}}' 
+    cloud.google.com/neg: '{"ingress": true}'
+    cloud.google.com/backend-config: '{"ports": {"http":"backendconfig-portainer-server"}}'
 
 
 tls:

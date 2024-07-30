@@ -22,7 +22,7 @@ spec:
     timeoutSec: 5
     type: HTTP
     unhealthyThreshold: 2
-    port: 9090
+    port: 9000
     requestPath: /
   logging:
     enable: true
@@ -52,8 +52,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    kubernetes.io/ingress.allow-http: "true"
     kubernetes.io/ingress.class: gce
+    kubernetes.io/ingress.allow-http: "true"
     kubernetes.io/ingress.global-static-ip-name: eip-elb-prod-portainer-server
     networking.gke.io/v1beta1.FrontendConfig: "frontendconfig-portainer-server"
     networking.gke.io/managed-certificates: portainer-mcrt
