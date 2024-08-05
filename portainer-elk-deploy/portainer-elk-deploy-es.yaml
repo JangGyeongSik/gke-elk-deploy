@@ -1,0 +1,984 @@
+version: "3.8"
+
+services:
+  es-master-01: # docker-worker-01
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    hostname: ${ES_HOSTNAME_MASTER_01}
+    container_name: ${ES_HOSTNAME_MASTER_01}
+    volumes:
+      - //etc/timezone:/etc/timezone:ro
+      - //etc/localtime:/etc/localtime:ro
+      - //usr/share/zoneinfo:/usr/share/zoneinfo:ro    
+      - //home/apps/elasticsearch/logs:/usr/share/elasticsearch/logs
+      - es-master-01:/usr/share/elasticsearch/data
+    ports:
+      - target: 9200
+        published: 9200
+        protocol: tcp
+        mode: host
+      - target: 9300
+        published: 9300
+        protocol: tcp
+        mode: host        
+    environment:
+      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - cluster.name=${ELASTIC_CLUSTER_NAME}
+      - network.host=${ELASTIC_NETWORK_HOST}
+      - network.bind_host=${ELASTIC_NETWORK_HOST}
+      - network.publish_host=${ES_HOSTNAME_MASTER_01}
+      - http.host=${ELASTIC_NETWORK_HOST}
+      - http.bind_host=${ELASTIC_NETWORK_HOST}
+      - transport.host=${ELASTIC_NETWORK_HOST}
+      - transport.bind_host=${ELASTIC_NETWORK_HOST}
+      - node.roles=master
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xmx8g -Xms8g"
+      - TZ=Asia/Seoul
+    configs:
+      - source: es-master-01-config
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+    secrets:
+      - source: ca-crt 
+        target: /usr/share/elasticsearch/config/certs/ca/ca.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: ca-key 
+        target: /usr/share/elasticsearch/config/certs/ca/ca.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644     
+      - source: localhost-crt 
+        target: /usr/share/elasticsearch/config/certs/localhost/localhost.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: localhost-key 
+        target: /usr/share/elasticsearch/config/certs/localhost/localhost.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644      
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      elastic:
+    deploy:
+      placement:
+        constraints: [node.labels.es-master-01 == true]
+      # endpoint_mode: vip
+      mode: "global"
+      # replicas: 1  
+
+  es-master-02: # docker-worker-02
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    hostname: ${ES_HOSTNAME_MASTER_02}
+    container_name: ${ES_HOSTNAME_MASTER_02}
+    volumes:
+      - //etc/timezone:/etc/timezone:ro
+      - //etc/localtime:/etc/localtime:ro
+      - //usr/share/zoneinfo:/usr/share/zoneinfo:ro    
+      - //home/apps/elasticsearch/logs:/usr/share/elasticsearch/logs
+      - es-master-02:/usr/share/elasticsearch/data
+    ports:
+      - target: 9200
+        published: 9200
+        protocol: tcp
+        mode: host
+      - target: 9300
+        published: 9300
+        protocol: tcp
+        mode: host    
+    environment:
+      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - cluster.name=${ELASTIC_CLUSTER_NAME}
+      - network.host=${ELASTIC_NETWORK_HOST}
+      - network.bind_host=${ELASTIC_NETWORK_HOST}
+      - network.publish_host=${ES_HOSTNAME_MASTER_02}
+      - http.host=${ELASTIC_NETWORK_HOST}
+      - http.bind_host=${ELASTIC_NETWORK_HOST}
+      - transport.host=${ELASTIC_NETWORK_HOST}
+      - transport.bind_host=${ELASTIC_NETWORK_HOST}
+      - node.roles=master      
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xmx8g -Xms8g"
+      - TZ=Asia/Seoul
+    configs:
+      - source: es-master-02-config
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+    secrets:
+      - source: ca-crt 
+        target: /usr/share/elasticsearch/config/certs/ca/ca.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: ca-key 
+        target: /usr/share/elasticsearch/config/certs/ca/ca.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644     
+      - source: localhost-crt 
+        target: /usr/share/elasticsearch/config/certs/localhost/localhost.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: localhost-key 
+        target: /usr/share/elasticsearch/config/certs/localhost/localhost.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644                
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      elastic:
+    deploy:
+      placement:
+        constraints: [node.labels.es-master-02 == true]
+      # endpoint_mode: vip
+      mode: "global"
+      # replicas: 1  
+
+  es-master-03: # docker-worker-03
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    hostname: ${ES_HOSTNAME_MASTER_03}
+    container_name: ${ES_HOSTNAME_MASTER_03}
+    volumes:
+      - //etc/timezone:/etc/timezone:ro
+      - //etc/localtime:/etc/localtime:ro
+      - //usr/share/zoneinfo:/usr/share/zoneinfo:ro    
+      - //home/apps/elasticsearch/logs:/usr/share/elasticsearch/logs
+      - es-master-03:/usr/share/elasticsearch/data 
+    ports:
+      - target: 9200
+        published: 9200
+        protocol: tcp
+        mode: host
+      - target: 9300
+        published: 9300
+        protocol: tcp
+        mode: host     
+    environment:
+      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - cluster.name=${ELASTIC_CLUSTER_NAME}
+      - network.host=${ELASTIC_NETWORK_HOST}
+      - network.bind_host=${ELASTIC_NETWORK_HOST}
+      - network.publish_host=${ES_HOSTNAME_MASTER_03}
+      - http.host=${ELASTIC_NETWORK_HOST}
+      - http.bind_host=${ELASTIC_NETWORK_HOST}
+      - transport.host=${ELASTIC_NETWORK_HOST}
+      - transport.bind_host=${ELASTIC_NETWORK_HOST}
+      - node.roles=master      
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xmx8g -Xms8g"
+      - TZ=Asia/Seoul
+    configs:
+      - source: es-master-03-config
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+    secrets:
+      - source: ca-crt 
+        target: /usr/share/elasticsearch/config/certs/ca/ca.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: ca-key 
+        target: /usr/share/elasticsearch/config/certs/ca/ca.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644     
+      - source: localhost-crt 
+        target: /usr/share/elasticsearch/config/certs/localhost/localhost.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: localhost-key 
+        target: /usr/share/elasticsearch/config/certs/localhost/localhost.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644           
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      elastic:
+    deploy:
+      placement:
+        constraints: [node.labels.es-master-03 == true]
+      # endpoint_mode: vip 
+      mode: "global"
+      # replicas: 1  
+
+  es-data-01: # docker-worker-04 ( data )
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    hostname: ${ES_HOSTNAME_DATA_01}
+    container_name: ${ES_HOSTNAME_DATA_01}
+    volumes:
+      - //etc/timezone:/etc/timezone:ro
+      - //etc/localtime:/etc/localtime:ro
+      - //usr/share/zoneinfo:/usr/share/zoneinfo:ro    
+      - //home/apps/elasticsearch/logs:/usr/share/elasticsearch/logs
+      - es-data-01:/usr/share/elasticsearch/data
+    configs:
+      - source: es-data-config
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+        uid: '1000'
+        gid: '1000'
+        mode: 0644      
+    secrets:
+      - source: ca-crt 
+        target: /usr/share/elasticsearch/config/certs/ca/ca.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: ca-key 
+        target: /usr/share/elasticsearch/config/certs/ca/ca.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644     
+      - source: localhost-crt 
+        target: /usr/share/elasticsearch/config/certs/localhost/localhost.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: localhost-key 
+        target: /usr/share/elasticsearch/config/certs/localhost/localhost.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644          
+    environment:
+      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - cluster.name=${ELASTIC_CLUSTER_NAME}
+      - network.host=${ELASTIC_NETWORK_HOST}
+      - network.bind_host=${ELASTIC_NETWORK_HOST}
+      - network.publish_host=${ES_HOSTNAME_DATA_01}
+      - http.host=${ELASTIC_NETWORK_HOST}
+      - http.bind_host=${ELASTIC_NETWORK_HOST}
+      - transport.host=${ELASTIC_NETWORK_HOST}
+      - transport.bind_host=${ELASTIC_NETWORK_HOST}    
+      - ENROLLMENT_TOKEN=${ENROLLMENT_TOKEN}
+      - node.roles=data      
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xmx6g -Xms6g"
+      - TZ=Asia/Seoul
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      elastic:
+    deploy:
+      placement:
+        constraints: [node.labels.es-data-01 == true]
+      endpoint_mode: dnsrr
+      mode: "replicated"
+      replicas: 1
+
+  es-ingest-01: # docker-worker-04 ( Ingest )
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    hostname: ${ES_HOSTNAME_INGEST_01}
+    container_name: ${ES_HOSTNAME_INGEST_01}
+    volumes:
+      - //etc/timezone:/etc/timezone:ro
+      - //etc/localtime:/etc/localtime:ro
+      - //usr/share/zoneinfo:/usr/share/zoneinfo:ro    
+      - //home/apps/ingest/logs:/usr/share/elasticsearch/logs
+      - es-ingest-01:/usr/share/elasticsearch/data
+    configs:
+      - source: es-ingest-config
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+    secrets:
+      - source: ca-crt 
+        target: /usr/share/elasticsearch/config/certs/ca/ca.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: ca-key 
+        target: /usr/share/elasticsearch/config/certs/ca/ca.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644     
+      - source: localhost-crt 
+        target: /usr/share/elasticsearch/config/certs/localhost/localhost.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: localhost-key 
+        target: /usr/share/elasticsearch/config/certs/localhost/localhost.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644                 
+    environment:
+      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - cluster.name=${ELASTIC_CLUSTER_NAME}
+      - network.host=${ELASTIC_NETWORK_HOST}
+      - network.bind_host=${ELASTIC_NETWORK_HOST}
+      - network.publish_host=${ES_HOSTNAME_INGEST_01}
+      - http.host=${ELASTIC_NETWORK_HOST}
+      - http.bind_host=${ELASTIC_NETWORK_HOST}
+      - transport.host=${ELASTIC_NETWORK_HOST}
+      - transport.bind_host=${ELASTIC_NETWORK_HOST}    
+      - ENROLLMENT_TOKEN=${ENROLLMENT_TOKEN}
+      - node.roles=ingest      
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xmx4g -Xms4g"
+      - TZ=Asia/Seoul
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      elastic:
+    deploy:
+      placement:
+        constraints: [node.labels.es-ingest-01 == true]
+      endpoint_mode: dnsrr
+      mode: "replicated"
+      replicas: 1 
+
+  es-data-02: # docker-worker-05 ( data )
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    hostname: ${ES_HOSTNAME_DATA_02}
+    container_name: ${ES_HOSTNAME_DATA_02}
+    volumes:
+      - //etc/timezone:/etc/timezone:ro
+      - //etc/localtime:/etc/localtime:ro
+      - //usr/share/zoneinfo:/usr/share/zoneinfo:ro    
+      - //home/apps/elasticsearch/logs:/usr/share/elasticsearch/logs
+      - es-data-02:/usr/share/elasticsearch/data
+    configs:
+      - source: es-data-config
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+    secrets:
+      - source: ca-crt 
+        target: /usr/share/elasticsearch/config/certs/ca/ca.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: ca-key 
+        target: /usr/share/elasticsearch/config/certs/ca/ca.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644     
+      - source: localhost-crt 
+        target: /usr/share/elasticsearch/config/certs/localhost/localhost.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: localhost-key 
+        target: /usr/share/elasticsearch/config/certs/localhost/localhost.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644     
+    environment:
+      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - cluster.name=${ELASTIC_CLUSTER_NAME}
+      - network.host=${ELASTIC_NETWORK_HOST}
+      - network.bind_host=${ELASTIC_NETWORK_HOST}
+      - network.publish_host=${ES_HOSTNAME_DATA_02}
+      - http.host=${ELASTIC_NETWORK_HOST}
+      - http.bind_host=${ELASTIC_NETWORK_HOST}
+      - transport.host=${ELASTIC_NETWORK_HOST}
+      - transport.bind_host=${ELASTIC_NETWORK_HOST}    
+      - ENROLLMENT_TOKEN=${ENROLLMENT_TOKEN}
+      - bootstrap.memory_lock=true
+      - node.roles=data
+      - "ES_JAVA_OPTS=-Xmx8g -Xms8g"
+      - TZ=Asia/Seoul
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      elastic:
+    deploy:
+      placement:
+        constraints: [node.labels.es-data-02 == true]
+      endpoint_mode: dnsrr
+      mode: "replicated"
+      replicas: 1 
+
+  es-coordinate-01: # docker-worker-05 ( coordinate )
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    hostname: ${ES_HOSTNAME_COORDINATE_01}
+    container_name: ${ES_HOSTNAME_COORDINATE_01}
+    volumes:
+      - //etc/timezone:/etc/timezone:ro
+      - //etc/localtime:/etc/localtime:ro
+      - //usr/share/zoneinfo:/usr/share/zoneinfo:ro    
+      - //home/apps/coordinate/logs:/usr/share/elasticsearch/logs
+      - es-coordinate-01:/usr/share/elasticsearch/data
+    configs:
+      - source: es-coordinate-config
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+    secrets:
+      - source: ca-crt 
+        target: /usr/share/elasticsearch/config/certs/ca/ca.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: ca-key 
+        target: /usr/share/elasticsearch/config/certs/ca/ca.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644     
+      - source: localhost-crt 
+        target: /usr/share/elasticsearch/config/certs/localhost/localhost.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: localhost-key 
+        target: /usr/share/elasticsearch/config/certs/localhost/localhost.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644     
+    environment:
+      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - cluster.name=${ELASTIC_CLUSTER_NAME}
+      - network.host=${ELASTIC_NETWORK_HOST}
+      - network.bind_host=${ELASTIC_NETWORK_HOST}
+      - network.publish_host=${ES_HOSTNAME_COORDINATE_01}
+      - http.host=${ELASTIC_NETWORK_HOST}
+      - http.bind_host=${ELASTIC_NETWORK_HOST}
+      - transport.host=${ELASTIC_NETWORK_HOST}
+      - transport.bind_host=${ELASTIC_NETWORK_HOST}    
+      - ENROLLMENT_TOKEN=${ENROLLMENT_TOKEN}
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xmx4g -Xms4g"
+      - TZ=Asia/Seoul
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      elastic:
+    deploy:
+      placement:
+        constraints: [node.labels.es-data-02 == true]
+      endpoint_mode: dnsrr
+      mode: "replicated"
+      replicas: 1 
+
+  es-data-03: # docker-worker-06 ( Data )
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    hostname: ${ES_HOSTNAME_DATA_03}
+    container_name: ${ES_HOSTNAME_DATA_03}
+    volumes:
+      - //etc/timezone:/etc/timezone:ro
+      - //etc/localtime:/etc/localtime:ro
+      - //usr/share/zoneinfo:/usr/share/zoneinfo:ro    
+      - //home/apps/elasticsearch/logs:/usr/share/elasticsearch/logs
+      - es-data-03:/usr/share/elasticsearch/data
+    configs:
+      - source: es-data-config
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+    secrets:
+      - source: ca-crt 
+        target: /usr/share/elasticsearch/config/certs/ca/ca.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: ca-key 
+        target: /usr/share/elasticsearch/config/certs/ca/ca.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644     
+      - source: localhost-crt 
+        target: /usr/share/elasticsearch/config/certs/localhost/localhost.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: localhost-key 
+        target: /usr/share/elasticsearch/config/certs/localhost/localhost.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644       
+    environment:
+      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - cluster.name=${ELASTIC_CLUSTER_NAME}
+      - network.host=${ELASTIC_NETWORK_HOST}
+      - network.bind_host=${ELASTIC_NETWORK_HOST}
+      - network.publish_host=${ES_HOSTNAME_DATA_03}
+      - http.host=${ELASTIC_NETWORK_HOST}
+      - http.bind_host=${ELASTIC_NETWORK_HOST}
+      - transport.host=${ELASTIC_NETWORK_HOST}
+      - transport.bind_host=${ELASTIC_NETWORK_HOST}    
+      - ENROLLMENT_TOKEN=${ENROLLMENT_TOKEN}
+      - node.roles=data      
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xmx8g -Xms8g"
+      - TZ=Asia/Seoul
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      elastic:
+    deploy:
+      placement:
+        constraints: [node.labels.es-data-03 == true]
+      endpoint_mode: dnsrr
+      mode: "replicated"
+      replicas: 1 
+
+  es-coordinate-02: # docker-worker-06 ( coordinate )
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    hostname: ${ES_HOSTNAME_COORDINATE_02}
+    container_name: ${ES_HOSTNAME_COORDINATE_02}
+    volumes:
+      - //etc/timezone:/etc/timezone:ro
+      - //etc/localtime:/etc/localtime:ro
+      - //usr/share/zoneinfo:/usr/share/zoneinfo:ro    
+      - //home/apps/coordinate/logs:/usr/share/elasticsearch/logs
+      - es-coordinate-02:/usr/share/elasticsearch/data
+    configs:
+      - source: es-coordinate-config
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+    secrets:
+      - source: ca-crt 
+        target: /usr/share/elasticsearch/config/certs/ca/ca.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: ca-key 
+        target: /usr/share/elasticsearch/config/certs/ca/ca.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644     
+      - source: localhost-crt 
+        target: /usr/share/elasticsearch/config/certs/localhost/localhost.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: localhost-key 
+        target: /usr/share/elasticsearch/config/certs/localhost/localhost.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644     
+    environment:
+      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - cluster.name=${ELASTIC_CLUSTER_NAME}
+      - network.host=${ELASTIC_NETWORK_HOST}
+      - network.bind_host=${ELASTIC_NETWORK_HOST}
+      - network.publish_host=${ES_HOSTNAME_COORDINATE_02}
+      - http.host=${ELASTIC_NETWORK_HOST}
+      - http.bind_host=${ELASTIC_NETWORK_HOST}
+      - transport.host=${ELASTIC_NETWORK_HOST}
+      - transport.bind_host=${ELASTIC_NETWORK_HOST}    
+      - ENROLLMENT_TOKEN=${ENROLLMENT_TOKEN}
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xmx4g -Xms4g"
+      - TZ=Asia/Seoul
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      elastic:
+    deploy:
+      placement:
+        constraints: [node.labels.es-coordinate-02 == true]
+      endpoint_mode: dnsrr
+      mode: "replicated"
+      replicas: 1
+
+  es-data-04: # docker-worker-07 ( Data )
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    hostname: ${ES_HOSTNAME_DATA_04}
+    container_name: ${ES_HOSTNAME_DATA_04}
+    volumes:
+      - //etc/timezone:/etc/timezone:ro
+      - //etc/localtime:/etc/localtime:ro
+      - //usr/share/zoneinfo:/usr/share/zoneinfo:ro    
+      - //home/apps/elasticsearch/logs:/usr/share/elasticsearch/logs
+      - es-data-04:/usr/share/elasticsearch/data
+    configs:
+      - source: es-data-config
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+    secrets:
+      - source: ca-crt 
+        target: /usr/share/elasticsearch/config/certs/ca/ca.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: ca-key 
+        target: /usr/share/elasticsearch/config/certs/ca/ca.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644     
+      - source: localhost-crt 
+        target: /usr/share/elasticsearch/config/certs/localhost/localhost.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: localhost-key 
+        target: /usr/share/elasticsearch/config/certs/localhost/localhost.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644       
+    environment:
+      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - cluster.name=${ELASTIC_CLUSTER_NAME}
+      - network.host=${ELASTIC_NETWORK_HOST}
+      - network.bind_host=${ELASTIC_NETWORK_HOST}
+      - network.publish_host=${ES_HOSTNAME_DATA_04}
+      - http.host=${ELASTIC_NETWORK_HOST}
+      - http.bind_host=${ELASTIC_NETWORK_HOST}
+      - transport.host=${ELASTIC_NETWORK_HOST}
+      - transport.bind_host=${ELASTIC_NETWORK_HOST}    
+      - ENROLLMENT_TOKEN=${ENROLLMENT_TOKEN}
+      - node.roles=data      
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xmx8g -Xms8g"
+      - TZ=Asia/Seoul
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      elastic:
+    deploy:
+      placement:
+        constraints: [node.labels.es-data-04 == true]
+      endpoint_mode: dnsrr
+      mode: "replicated"
+      replicas: 1 
+
+  es-data-05: # docker-worker-08 ( data )
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    hostname: ${ES_HOSTNAME_DATA_05}
+    container_name: ${ES_HOSTNAME_DATA_05}
+    volumes:
+      - //etc/timezone:/etc/timezone:ro
+      - //etc/localtime:/etc/localtime:ro
+      - //usr/share/zoneinfo:/usr/share/zoneinfo:ro    
+      - //home/apps/elasticsearch/logs:/usr/share/elasticsearch/logs
+      - es-data-05:/usr/share/elasticsearch/data
+    configs:
+      - source: es-data-config
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+    secrets:
+      - source: ca-crt 
+        target: /usr/share/elasticsearch/config/certs/ca/ca.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: ca-key 
+        target: /usr/share/elasticsearch/config/certs/ca/ca.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644     
+      - source: localhost-crt 
+        target: /usr/share/elasticsearch/config/certs/localhost/localhost.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: localhost-key 
+        target: /usr/share/elasticsearch/config/certs/localhost/localhost.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644       
+    environment:
+      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - cluster.name=${ELASTIC_CLUSTER_NAME}
+      - network.host=${ELASTIC_NETWORK_HOST}
+      - network.bind_host=${ELASTIC_NETWORK_HOST}
+      - network.publish_host=${ES_HOSTNAME_DATA_05}
+      - http.host=${ELASTIC_NETWORK_HOST}
+      - http.bind_host=${ELASTIC_NETWORK_HOST}
+      - transport.host=${ELASTIC_NETWORK_HOST}
+      - transport.bind_host=${ELASTIC_NETWORK_HOST}    
+      - ENROLLMENT_TOKEN=${ENROLLMENT_TOKEN}
+      - node.roles=data      
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xmx8g -Xms8g"
+      - TZ=Asia/Seoul
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      elastic:
+    deploy:
+      placement:
+        constraints: [node.labels.es-data-05 == true]
+      endpoint_mode: dnsrr
+      mode: "replicated"
+      replicas: 1 
+
+  es-kibana-01: # docker-worker-07에 배치
+    image: docker.elastic.co/kibana/kibana:${KIBANA_VERSION}
+    hostname: ${KIBANA_HOSTNAME}
+    container_name: ${KIBANA_HOSTNAME}  
+    ports:
+      - 5601:5601
+    configs:
+      - source: es-kibana-config
+        target: /usr/share/kibana/config/kibana.yml
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+    secrets:
+      - source: ca-crt 
+        target: /usr/share/kibana/config/certs/ca/ca.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: ca-key 
+        target: /usr/share/kibana/config/certs/ca/ca.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: kibana-crt 
+        target: /usr/share/kibana/config/certs/kibana.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: kibana-key 
+        target: /usr/share/kibana/config/certs/kibana.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: localhost-crt 
+        target: /usr/share/kibana/config/certs/localhost/localhost.crt
+        uid: '1000'
+        gid: '1000'
+        mode: 0644
+      - source: localhost-key 
+        target: /usr/share/kibana/config/certs/localhost/localhost.key
+        uid: '1000'
+        gid: '1000'
+        mode: 0644                         
+    environment:
+      - SERVER_NAME=${KIBANA_HOSTNAME}
+      - SERVER_PUBLICBASEURL=https://${KIBANA_HOSTNAME}:5601
+      - ELASTICSEARCH_HOSTS=["https://${ES_HOSTNAME_MASTER_01}:9200","https://${ES_HOSTNAME_MASTER_02}:9200","https://${ES_HOSTNAME_MASTER_03}:9200"]
+      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - ENROLLMENT_TOKEN=${ENROLLMENT_TOKEN}
+      - monitoring.enabled=true
+      - monitoring.ui.container.elasticsearch.enabled=true
+      - XPACK_SECURITY_SESSIONTIMEOUT=600000
+      - TZ="Asia/Seoul"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1    	
+    networks:
+      elastic:
+    volumes:
+      - //etc/timezone:/etc/timezone:ro
+      - //etc/localtime:/etc/localtime:ro
+      - //usr/share/zoneinfo:/usr/share/zoneinfo:ro    
+      - //home/apps/kibana/logs:/usr/share/kibana/logs
+      - es-kibana-01:/usr/share/kibana/data
+    deploy:
+      placement:
+        constraints: [node.labels.es-kibana-01 == true]
+      endpoint_mode: vip
+      mode: "global"
+  
+  es-logstash-01:
+      image: docker.elastic.co/logstash/logstash:${LOGSTASH_VERSION}
+      hostname: ${ES_HOSTNAME_LOGSTASH_01}
+      container_name: ${ES_HOSTNAME_LOGSTASH_01}
+      environment:
+        - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+        - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+        - network.bind_host=${ELASTIC_NETWORK_HOST}
+        - network.publish_host=${ES_HOSTNAME_LOGSTASH_01}
+        - http.host=${ELASTIC_NETWORK_HOST}
+        - http.bind_host=${ELASTIC_NETWORK_HOST}
+        - transport.host=${ELASTIC_NETWORK_HOST}
+        - transport.bind_host=${ELASTIC_NETWORK_HOST}    
+        - ENROLLMENT_TOKEN=${ENROLLMENT_TOKEN}
+        - bootstrap.memory_lock=true
+        - "LS_JAVA_OPTS=-Xmx4g -Xms4g"
+        - TZ="Asia/Seoul"
+      ulimits:
+        memlock:
+          soft: -1
+          hard: -1    	
+      networks:
+        elastic:
+      volumes:
+        - //home/apps/logstash/config:/usr/share/logstash/config
+        - //home/apps/logstash/logs:/usr/share/logstash/logs
+        - es-logstash-01:/usr/share/logstash/data
+      command: logstash -f /usr/share/logstash/config/logstash.conf
+      deploy:
+        placement:
+          constraints: [node.labels.es-logstash-01 == true]
+        endpoint_mode: dnsrr
+        mode: "replicated"
+        replicas: 1
+
+  # nginx:
+  #   image: nginx:latest
+  #   hostname: nginx_proxy
+  #   container_name: nginx_proxy
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   environment:
+  #     - TZ="Asia/Seoul"
+  #   networks:
+  #     elastic:
+  #   volumes:
+  #     - //home/apps/nginx/conf:/etc/nginx
+  #     - //home/apps/nginx/logs:/var/log/nginx
+  #   deploy:
+  #     placement:
+  #       constraints: [node.labels.nginx == true]
+  #     endpoint_mode: vip
+  #     mode: "global"
+
+  metricbeat:
+    image: docker.elastic.co/beats/metricbeat:${METRICBEAT_VERSION}
+    hostname: ${METRICBEAT}
+    container_name: ${METRICBEAT}
+    user: root
+    volumes:
+      - //etc/timezone:/etc/timezone:ro
+      - //etc/localtime:/etc/localtime:ro
+      - //usr/share/zoneinfo:/usr/share/zoneinfo:ro      
+      - //var/run/docker.sock:/var/run/docker.sock:ro
+      - //sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - //proc:/hostfs/proc:ro
+      - //:/hostfs:ro
+      - metricbeat:/usr/share/metricbeat/data      
+    configs:
+      - source: es-metricbeat-config
+        target: /usr/share/metricbeat/config/metricbeat.yml
+        uid: '1000'
+        gid: '1000'
+        mode: 0644  
+    environment:      
+      - TZ=Asia/Seoul
+    networks:
+      elastic:
+    deploy:
+      placement:
+        constraints: [node.labels.metricbeat == true]
+      mode: "global"
+
+networks:
+  elastic:
+    name: elastic
+    driver: overlay
+    attachable: true
+    ipam:
+      driver: default
+      config:
+        - subnet: "10.0.100.0/24"
+    driver_opts:
+      com.docker.network.driver.mtu: "1460"
+
+volumes:
+  es-master-01:
+    driver: local
+  es-master-02:
+    driver: local
+  es-master-03:
+    driver: local
+  es-data-01:
+    driver: local 
+  es-ingest-01:
+    driver: local       
+  es-data-02:
+    driver: local   
+  es-data-03:
+    driver: local  
+  es-data-04:
+    driver: local  
+  es-data-05:
+    driver: local
+  es-data-06:
+    driver: local    
+  es-data-07:
+    driver: local
+  es-coordinate-01:
+    driver: local 
+  es-coordinate-02:        
+    driver: local
+  es-logstash-01:
+    driver: local                  
+  es-kibana-01:
+    driver: local
+  metricbeat:
+    driver: local
+
+configs:
+  es-metricbeat-config:
+    external: true
+  es-kibana-config:
+    external: true
+  es-coordinate-config:
+    external: true  
+  es-ingest-config:
+    external: true  
+  es-data-config:
+    external: true
+  es-master-01-config:
+    external: true
+  es-master-02-config:
+    external: true
+  es-master-03-config:
+    external: true
+
+secrets:
+  ca-crt:
+    external: true
+  ca-key:
+    external: true
+  localhost-crt:
+    external: true  
+  localhost-key:    
+    external: true
+  kibana-crt:
+    external: true
+  kibana-key:
+    external: true

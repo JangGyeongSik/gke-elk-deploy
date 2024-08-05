@@ -1,0 +1,39 @@
+################################
+cluster.name: "portainer-elk-deploy-es"
+network.host: 0.0.0.0
+
+#----------------------- BEGIN SECURITY AUTO CONFIGURATION -----------------------
+#
+# The following settings, TLS certificates, and keys have been automatically
+# generated to configure Elasticsearch security features on 06-02-2024 02:32:28
+#
+# --------------------------------------------------------------------------------
+
+# Enable security features
+xpack.security.enabled: true
+
+xpack.security.enrollment.enabled: true
+
+# Enable encryption for HTTP API client connections, such as Kibana, Logstash, and Agents
+xpack.security.http.ssl:
+  enabled: true
+  key: certs/localhost/localhost.key
+  certificate: certs/localhost/localhost.crt
+  certificate_authorities: certs/ca/ca.crt
+xpack.security.http.ssl.verification_mode: certificate
+
+# Enable encryption and mutual authentication between cluster nodes
+xpack.security.transport.ssl:
+  enabled: true
+  key: certs/localhost/localhost.key
+  certificate: certs/localhost/localhost.crt
+  certificate_authorities: certs/ca/ca.crt
+xpack.security.transport.ssl.verification_mode: certificate
+
+# Create a new cluster with the current node only
+# Additional nodes can still join the cluster later
+cluster.initial_master_nodes: ["es-master-01","es-master-02","es-master-03"]
+# Discover existing nodes in the cluster
+discovery.seed_hosts: ["es-master-02","es-master-03"]
+
+node.roles: [ master, remote_cluster_client ] # master, data, ingest, coordinate
